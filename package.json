@@ -1,6 +1,6 @@
 {
   "name": "vue-chart-simple",
-  "description": "A graph project with Vue.js and Chart.js",
+  "description": "A graph plotting project with Vue.js and Chart.js",
   "version": "1.0.0",
   "author": "Gbekeloluwa Olufotebi Simeon <olufotebigbeke@gmail.com>",
   "private": true,
