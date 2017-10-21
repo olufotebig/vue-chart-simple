@@ -35,10 +35,26 @@ export default {
     AppChart
   },
   created() {
+    let dataUrl = "https://private-627474-nulisec.apiary-mock.com/sales";
     const that = this;
-    setTimeout(function() {
-      that.updateparsedData(that.mock);
-    }, 0);
+    const request = new XMLHttpRequest();
+    request.open("GET", dataUrl, true);
+    
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        var resp = JSON.parse(request.responseText);
+        that.updateparsedData(resp);
+      } else {
+        // We reached our target server, but it returned an error
+      }
+    };
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+    };
+
+    request.send();
   },
   computed: {
     periodOptions() {
@@ -100,27 +116,28 @@ export default {
       if (this.activeView === "week") {
         let periodLabels = this.optimizer.labels_week;
         let periodData = [];
-        let salesSum = 0;        
+        let salesSum = 0;
         const weekDay = moment(`${this.selectYear}W${this.selectPeriod}`);
 
-        let month ;
+        let month;
         let date;
         for (let i = 0; i < 7; i++) {
-          month = weekDay.month() + 1 ; // moment month is zero indexed so make one indexed
+          month = weekDay.month() + 1; // moment month is zero indexed so make one indexed
           month = month > 9 ? "" + month : "0" + month; // I have used this a number of times, extract to function
           let dataSource = this.parsedData[this.selectYear][month];
           if (dataSource === undefined) {
             periodData.push(0);
           } else {
-            date = weekDay.date() > 9 ? '' +  weekDay.date() : '0' +weekDay.date();
-            if(dataSource[date] === undefined){
+            date =
+              weekDay.date() > 9 ? "" + weekDay.date() : "0" + weekDay.date();
+            if (dataSource[date] === undefined) {
               periodData.push(0);
             } else {
-              periodData.push(dataSource[date] )
+              periodData.push(dataSource[date]);
               salesSum += dataSource[date];
             }
           }
-          weekDay.add(1, 'd');
+          weekDay.add(1, "d");
         }
         this.periodSalesSum = salesSum; // TODO: improve
         return {
@@ -207,93 +224,7 @@ export default {
       },
       parsedData: {}, // TODO: describe structure of object in comments or docs
       periodSalesSum: 0,
-      title: "Vue.js and Chart.js Simple App",
-      mock: [
-        {
-          sale: "$10290",
-          published_at: "2017-10-05T08:40:51.620Z"
-        },
-        {
-          sale: "$10130",
-          published_at: "2017-11-05T08:40:51.620Z"
-        },
-        {
-          sale: "$12000",
-          published_at: "2017-12-05T08:40:51.620Z"
-        },
-        {
-          sale: "$10320",
-          published_at: "2017-09-05T08:40:51.620Z"
-        },
-        {
-          sale: "$13120",
-          published_at: "2017-08-05T08:40:51.620Z"
-        },
-        {
-          sale: "$16540",
-          published_at: "2017-10-15T08:40:51.620Z"
-        },
-        {
-          sale: "$12640",
-          published_at: "2017-10-09T08:40:51.620Z"
-        },
-        {
-          sale: "$24120",
-          published_at: "2017-10-05T12:40:51.620Z"
-        },
-        {
-          sale: "$82120",
-          published_at: "2017-09-05T12:04:51.620Z"
-        },
-        {
-          sale: "$95120",
-          published_at: "2017-10-05T10:40:51.620Z"
-        },
-        {
-          sale: "$29020",
-          published_at: "2017-11-05T12:52:51.620Z"
-        },
-        {
-          sale: "$21209",
-          published_at: "2017-12-05T12:04:51.620Z"
-        },
-        {
-          sale: "$51240",
-          published_at: "2017-08-05T04:40:51.620Z"
-        },
-        {
-          sale: "$21590",
-          published_at: "2017-10-05T12:30:51.620Z"
-        },
-        {
-          sale: "$74120",
-          published_at: "2017-10-09T12:03:51.620Z"
-        },
-        {
-          sale: "$12920",
-          published_at: "2017-10-15T10:40:51.620Z"
-        },
-        {
-          sale: "$10972",
-          published_at: "2017-10-07T12:40:51.620Z"
-        },
-        {
-          sale: "$12290",
-          published_at: "2017-10-25T12:04:51.620Z"
-        },
-        {
-          sale: "$51220",
-          published_at: "2017-10-05T10:40:51.620Z"
-        },
-        {
-          sale: "$12290",
-          published_at: "2017-10-05T10:40:51.620Z"
-        },
-        {
-          sale: "$41220",
-          published_at: "2017-11-07T10:40:51.620Z"
-        }
-      ]
+      title: "Vue.js and Chart.js Simple App"
     };
   },
   methods: {
