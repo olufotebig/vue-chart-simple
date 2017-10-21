@@ -1,6 +1,6 @@
 # vue-chart-simple
 
-> A graph project with Vue.js and Chart.js
+> A simple chart project with Vue.js and Chart.js
 
 ## Build Setup
 
